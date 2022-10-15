@@ -5,14 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>刮刮乐</title>
+    <style>
+      #reset {
+        position: absolute;
+        top:10px;
+        right:10px;
+      }
+      #change {
+        position: absolute;
+        top:80px;
+        right:10px;
+      }
+    </style>
 </head>
 <body>
 <canvas id="cs" width=800 height=800></canvas>
+<button id="change">再刮一张</button>
+<button id="reset">重置</button>
 <script>
 const ctx=cs.getContext('2d')
 cs.style.background='red'
 let allInfo=['10万','1千','1千','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾']
 let newArr=[]
+if(localStorage.getItem('allInfo')){
+   allInfo=JSON.parse(localStorage.getItem('allInfo'))
+   if(allInfo.length===0){
+    alert('您的抽奖次数已用完！')
+  }
+}else{
+  localStorage.setItem('allInfo',JSON.stringify(allInfo))
+}
+
 cs.addEventListener('mousemove',function(e){
   ctx.save()
   ctx.beginPath()
@@ -27,6 +50,14 @@ cs.addEventListener('mousemove',function(e){
   ctx.closePath()
   ctx.restore()
 })
+change.addEventListener('click',function(){
+  window.location.reload()
+})
+reset.addEventListener('click',function(){
+  allInfo=['10万','1千','1千','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾']
+  localStorage.setItem('allInfo',JSON.stringify(allInfo))
+  window.location.reload()
+})
 function windowToCanvas(x,y){
   const CSBX=cs.getBoundingClientRect()
   let canvasX=x - CSBX.left
@@ -36,15 +67,19 @@ function windowToCanvas(x,y){
 function drawText(){
   ctx.beginPath()
   ctx.strokeStyle='blue'
-  ctx.font='bold 100px arial'
-  ctx.lineWidth=4
+  ctx.font='bold 50px arial'
+  ctx.lineWidth=3
   ctx.textAlign='left'
   ctx.textBaseline='top'
+
   if(newArr.length===0){
     let randomIndex=Math.floor(Math.random()*allInfo.length)
     newArr.push(allInfo[randomIndex]) 
+    allInfo.splice(randomIndex,1)
+    localStorage.setItem('allInfo',JSON.stringify(allInfo))
+    console.log(allInfo)
   }
-  ctx.strokeText(newArr[0],100,100)
+  ctx.strokeText(newArr[0],50,50)
   ctx.closePath()
 }
 </script>
