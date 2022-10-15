@@ -8,17 +8,17 @@
 </head>
 <body>
 <canvas id="cs" width=800 height=800></canvas>
-<script id="jsbin-javascript">
+<script>
 const ctx=cs.getContext('2d')
 cs.style.background='red'
-
+let allInfo=['10万','1千','1千','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾','谢谢惠顾']
+let newArr=[]
 cs.addEventListener('mousemove',function(e){
   ctx.save()
   ctx.beginPath()
   let x=e.clientX
   let y=e.clientY
   const coords=windowToCanvas(x,y)
-  console.log(coords)
   ctx.arc(coords.x,coords.y,50,0,Math.PI*2)
   ctx.clip()
   ctx.fillStyle='yellow'
@@ -34,12 +34,18 @@ function windowToCanvas(x,y){
   return {x:canvasX,y:canvasY}
 }
 function drawText(){
+  ctx.beginPath()
   ctx.strokeStyle='blue'
   ctx.font='bold 100px arial'
   ctx.lineWidth=4
   ctx.textAlign='left'
   ctx.textBaseline='top'
-  ctx.strokeText('100万',100,100)
+  if(newArr.length===0){
+    let randomIndex=Math.floor(Math.random()*allInfo.length)
+    newArr.push(allInfo[randomIndex]) 
+  }
+  ctx.strokeText(newArr[0],100,100)
+  ctx.closePath()
 }
 </script>
 </body>
